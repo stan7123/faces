@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
 
-# Create your views here.
+from faces.serializers import FacesSubmissionSerializer
+
+
+class SubmitImageView(CreateAPIView):
+    serializer_class = FacesSubmissionSerializer

@@ -6,7 +6,7 @@ services:
     ports:
       - "8282:8000"
     volumes:
-      - ./backend/faces_api:/code/
+      - ./backend/recognition:/code/
     depends_on:
       - redis
     env_file: .env

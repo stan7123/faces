@@ -19,4 +19,4 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 WORKDIR /code
 COPY poetry.lock pyproject.toml /code/
 RUN poetry install --no-root && rm -rf $POETRY_CACHE_DIR
-COPY faces_api /code/
+COPY recognition /code/

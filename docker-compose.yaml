@@ -1,0 +1,17 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    command: sleep 100000
+    ports:
+      - "8282:8000"
+    volumes:
+      - ./backend/faces_api:/code/
+    depends_on:
+      - redis
+    env_file: .env
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"

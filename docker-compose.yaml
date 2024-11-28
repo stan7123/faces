@@ -11,6 +11,16 @@ services:
       - redis
     env_file: .env
 
+  queue-worker:
+    build:
+      context: ./backend
+    entrypoint: python manage.py rqworker default
+    volumes:
+      - ./backend/recognition:/code/
+    depends_on:
+      - redis
+    env_file: .env
+
   redis:
     image: redis:7
     ports:

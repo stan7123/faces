@@ -46,6 +46,7 @@ class SubmitImageViewTestSuite(APITestCase):
         submission = FacesSubmission.objects.get()
         self.assertTrue(submission.processed_image.name == '')
         self.assertIsNone(submission.processed_at)
+        self.assertIsNone(submission.faces_count)
         self.assertTrue(submission.image.name.endswith(Path(temp_image.name).suffix))
 
     def test_no_image_send_returns_bad_data(self):

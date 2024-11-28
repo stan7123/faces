@@ -7,6 +7,7 @@ services:
       - "8282:8000"
     volumes:
       - ./backend/recognition:/code/
+      - ./backend/storage:/storage/
     depends_on:
       - redis
     env_file: .env
@@ -14,9 +15,10 @@ services:
   queue-worker:
     build:
       context: ./backend
-    entrypoint: python manage.py rqworker default
+    entrypoint: python manage.py rqworker default --with-scheduler
     volumes:
       - ./backend/recognition:/code/
+      - ./backend/storage:/storage/
     depends_on:
       - redis
     env_file: .env

@@ -5,6 +5,9 @@ ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update \
   && apt-get install --yes --no-install-recommends \
+    build-essential \
+    cmake \
+    software-properties-common \
     curl \
   && apt-get autoremove \
   && rm -rf /var/lib/apt/lists/*

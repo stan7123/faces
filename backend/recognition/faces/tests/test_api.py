@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+from tempfile import NamedTemporaryFile, TemporaryDirectory
+from unittest.mock import patch
 
 from django.shortcuts import reverse
+from django.test import override_settings
 from PIL import Image
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
@@ -30,7 +32,9 @@ class SubmitImageViewTestSuite(APITestCase):
         self.client = APIClient()
         self.endpoint_url = reverse('faces-image-submit')
 
-    def test_successful_image_submission(self):
+    @override_settings(MEDIA_ROOT=TemporaryDirectory(prefix='mediatest').name)
+    @patch("faces.views.process_faces_image.delay")
+    def test_successful_image_submission(self, mocked_task):
         self.assertEqual(FacesSubmission.objects.count(), 0)
         temp_image = get_temp_image()
 
@@ -48,6 +52,7 @@ class SubmitImageViewTestSuite(APITestCase):
         self.assertIsNone(submission.processed_at)
         self.assertIsNone(submission.faces_count)
         self.assertTrue(submission.image.name.endswith(Path(temp_image.name).suffix))
+        mocked_task.assert_called_once_with(submission_id=submission.id)
 
     def test_no_image_send_returns_bad_data(self):
         self.assertEqual(FacesSubmission.objects.count(), 0)

@@ -1,6 +1,8 @@
 # Faces
 Simple app for face recognition from images.
 
+![connery](https://github.com/user-attachments/assets/10e2093d-2874-4480-91ff-887bc55495f5) ![image](https://github.com/user-attachments/assets/1a86feaf-2f87-46b3-a278-6f578754e32f)
+
 ## Installation
 
 ### Requirements

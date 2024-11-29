@@ -37,9 +37,9 @@ Images can be submitted by sending request with `multipart/form-data` content ty
 
 An exemplary **curl** call: `curl -v -F image=@/path/to/image.png http://localhost:8282/image/`
 
-In a response to this call, there is a websocket endpoint address returned. All websocket's connected clients are notified in real time about each successful face recognition.
+In a response to this call, there is a websocket endpoint address returned (`ws://localhost:8282/faces`). All websocket's connected clients are notified in real time about each successful face recognition.
 
-Message format: 
+Notification message format: 
 ```json
 {
     "message": "Successful face detection", 

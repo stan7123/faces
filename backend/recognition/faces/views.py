@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,7 +14,7 @@ class SubmitImageView(CreateAPIView):
         super().create(request, *args, **kwargs)
         response_data = {
             'message': 'Request accepted. Starting image processing.',
-            'feed_url': 'TODO',
+            'feed_url': settings.FACES_WS_URL,
         }
         return Response(response_data, status=status.HTTP_202_ACCEPTED)
 

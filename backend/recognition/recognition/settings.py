@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from urllib.parse import urljoin
 
 import environ
 
@@ -180,3 +181,5 @@ LOGGING = {
 }
 
 FACES_DETECTION_TOPIC = 'face-detection'
+SERVICE_HOST = env.str('SERVICE_HOST')
+FACES_WS_URL = urljoin(f'ws://{SERVICE_HOST}', '/faces')

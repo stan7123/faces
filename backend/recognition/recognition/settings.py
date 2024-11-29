@@ -178,3 +178,5 @@ LOGGING = {
         },
     }
 }
+
+FACES_DETECTION_TOPIC = 'face-detection'

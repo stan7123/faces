@@ -12,6 +12,18 @@ services:
       - redis
     env_file: .env
 
+  ws-backend:
+    build:
+      context: ./backend
+    command: python websocket.py
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./backend/recognition:/code/
+    depends_on:
+      - redis
+    env_file: .env
+
   queue-worker:
     build:
       context: ./backend

@@ -1,10 +1,13 @@
+import json
 import logging
 
 import face_recognition
+from django.conf import settings
 from django.utils import timezone
+from django_redis import get_redis_connection
 from django_rq import job
-from rq import Retry
 from PIL import Image, ImageDraw
+from rq import Retry
 
 from faces.models import FacesSubmission
 from faces.storage import save_processed_image
@@ -18,6 +21,10 @@ def process_faces_image(submission_id: int):
         submission = FacesSubmission.objects.get(id=submission_id)
     except FacesSubmission.DoesNotExist:
         logger.error(f'Could not find submission with {submission_id=} in DB.')
+        return
+
+    if submission.processed_at:
+        logger.warning(f'Submission {submission_id=} already processed. Skipping.')
         return
 
     logger.info(f'Processing image: {submission.image.name}')
@@ -34,15 +41,30 @@ def process_faces_image(submission_id: int):
             draw.rectangle(((left, top), (right, bottom)), outline=255, fill=None, width=2)
         marked_image_path = save_processed_image(marked_image)
 
-        logger.info(f'Saved processed image to: {marked_image_path}')
+        logger.info(f'Saved marked image to: {marked_image_path}')
 
         submission.faces_count = len(face_locations)
         submission.processed_at = timezone.now()
         submission.processed_image = str(marked_image_path)
         submission.save()
+
+        publish_detection(submission)
     else:
         logger.info('Skipping image marking.')
 
         submission.faces_count = len(face_locations)
         submission.processed_at = timezone.now()
         submission.save()
+
+
+def publish_detection(submission: FacesSubmission):
+    event = {
+        'message': 'Successful face detection',
+        'created_at': submission.created_at.isoformat(),
+        'processed_at': submission.processed_at.isoformat(),
+        'faces_count': submission.faces_count,
+        'image_url': submission.processed_image.url,
+    }
+    connection = get_redis_connection("default")
+    payload = json.dumps(event)
+    connection.publish(settings.FACES_DETECTION_TOPIC, payload)

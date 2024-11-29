@@ -31,9 +31,22 @@ Open http://localhost:8282/image to confirm the service is running (should show 
 
 ## How to use
 
-Images can be submitted by sending request with content type as `multipart/form-data` to http://localhost:8282/image/.
-An exemplary `curl` call: `curl -v -F image=@/path/to/image.png http://localhost:8282/image/`
+Images can be submitted by sending request with `multipart/form-data` content type and file in `image` field to http://localhost:8282/image/.
 
+An exemplary **curl** call: `curl -v -F image=@/path/to/image.png http://localhost:8282/image/`
+
+In a response to this call, there is a websocket endpoint address returned. All websocket's connected clients are notified in real time about each successful face recognition.
+
+Message format: 
+```json
+{
+    "message": "Successful face detection", 
+    "created_at": "2024-11-29T16:01:39.784343+00:00", 
+    "processed_at": "2024-11-29T16:01:42.763898+00:00", 
+    "faces_count": 9, 
+    "image_url": "/static/processed_faces/72/46/7246f927-94a4-4225-9a56-b52bab894ad0.jpg"
+}
+```
 
 Note: Image size is currently limited to 100MB. It can be adjusted on the proxy. 
 

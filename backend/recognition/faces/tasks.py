@@ -1,5 +1,6 @@
 import json
 import logging
+from urllib.parse import urljoin
 
 import face_recognition
 from django.conf import settings
@@ -63,8 +64,8 @@ def publish_detection(submission: FacesSubmission):
         'created_at': submission.created_at.isoformat(),
         'processed_at': submission.processed_at.isoformat(),
         'faces_count': submission.faces_count,
-        'image_url': submission.processed_image.url,
+        'image_url': urljoin(settings.SERVICE_URL, submission.processed_image.url)
     }
-    connection = get_redis_connection("default")
+    connection = get_redis_connection('default')
     payload = json.dumps(event)
     connection.publish(settings.FACES_DETECTION_TOPIC, payload)

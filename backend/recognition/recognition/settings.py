@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import environ
 
@@ -157,29 +157,31 @@ RQ_QUEUES = {
 }
 
 LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "rq_console": {
-            "format": "%(asctime)s %(levelname)s: %(message)s",
-            "datefmt": "%Y-%m-%d %H:%M:%S",
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'rq_console': {
+            'format': '%(asctime)s %(levelname)s: %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
         },
     },
-    "handlers": {
-        "rq_console": {
-            "level": "DEBUG",
-            "class": "rq.logutils.ColorizingStreamHandler",
-            "formatter": "rq_console",
+    'handlers': {
+        'rq_console': {
+            'level': 'DEBUG',
+            'class': 'rq.logutils.ColorizingStreamHandler',
+            'formatter': 'rq_console',
         },
     },
     'loggers': {
-        "rq.worker": {
-            "handlers": ["rq_console"],
-            "level": "DEBUG"
+        'rq.worker': {
+            'handlers': ['rq_console'],
+            'level': 'DEBUG'
         },
     }
 }
 
 FACES_DETECTION_TOPIC = 'face-detection'
-SERVICE_HOST = env.str('SERVICE_HOST')
+SERVICE_URL = env.str('SERVICE_URL')
+parsed_service_url = urlparse(SERVICE_URL)
+SERVICE_HOST = parsed_service_url.netloc
 FACES_WS_URL = urljoin(f'ws://{SERVICE_HOST}', '/faces')

@@ -31,7 +31,7 @@ Open http://localhost:8282/image to confirm the service is running (should show 
 
 ## How to use
 
-Images can be submitted by sending request with `multipart/form-data` content type and file in `image` field to http://localhost:8282/image/.
+Images can be submitted by sending request with `multipart/form-data` content type and file in `image` field to `http://localhost:8282/image/`.
 
 An exemplary **curl** call: `curl -v -F image=@/path/to/image.png http://localhost:8282/image/`
 
@@ -44,7 +44,7 @@ Message format:
     "created_at": "2024-11-29T16:01:39.784343+00:00", 
     "processed_at": "2024-11-29T16:01:42.763898+00:00", 
     "faces_count": 9, 
-    "image_url": "/static/processed_faces/72/46/7246f927-94a4-4225-9a56-b52bab894ad0.jpg"
+    "image_url": "http://localhost:8282/static/processed_faces/72/46/7246f927-94a4-4225-9a56-b52bab894ad0.jpg"
 }
 ```
 
@@ -56,6 +56,8 @@ Note: Image size is currently limited to 100MB. It can be adjusted on the proxy.
 - Storing uploaded and processed files in directories next to the code for simplicity. Usually some kind of storage service like S3 is used.
 - Using django-rq as simple and lightweight alternative to Celery
 - Using simple websocket stand-alone server to not go into more complicated Django channels. This required introducing nginx proxy to keep the requirement of serving the app on one port.
+- Face detection library is used without tuning any parameters.
+- Face detection tasks are retried 10 times with exponential backoff in case of error. After that, submissions can be ignored or a periodical task (not implemented) might try to schedule them again.  
 
 ## Things to improve for production setup
 - Components might require replacement when run in the cloud for scaling and reliability: RDBMS or key-value persistent storage as database, SQS or similar as queue etc.

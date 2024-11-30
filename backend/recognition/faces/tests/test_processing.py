@@ -1,5 +1,6 @@
 from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
+from unittest.mock import patch
 
 from django.conf import settings
 from django.test import override_settings, TestCase
@@ -21,7 +22,8 @@ def get_temp_face_image(image_relative_path: str) -> NamedTemporaryFile:
     STORAGE_ROOT=TemporaryDirectory(prefix='statictest').name,
 )
 class FacesRecognitionTaskTestCase(TestCase):
-    def test_successful_one_face_recognition(self):
+    @patch('faces.tasks.publish_detection')
+    def test_successful_one_face_recognition(self, mocked_publish_detection):
         face_image = get_temp_face_image('images/one_face_image.jpeg')
         submission = FacesSubmission.objects.create(image=face_image.name)
 
@@ -31,8 +33,10 @@ class FacesRecognitionTaskTestCase(TestCase):
         self.assertEqual(submission.faces_count, 1)
         self.assertIsNotNone(submission.processed_at)
         self.assertTrue(submission.processed_image.name.endswith('.jpg'))
+        mocked_publish_detection.assert_called_once()
 
-    def test_successful_multiple_face_recognition(self):
+    @patch('faces.tasks.publish_detection')
+    def test_successful_multiple_face_recognition(self, mocked_publish_detection):
         face_image = get_temp_face_image('images/two_faces_image.jpg')
         submission = FacesSubmission.objects.create(image=face_image.name)
 
@@ -42,8 +46,10 @@ class FacesRecognitionTaskTestCase(TestCase):
         self.assertEqual(submission.faces_count, 2)
         self.assertIsNotNone(submission.processed_at)
         self.assertTrue(submission.processed_image.name.endswith('.jpg'))
+        mocked_publish_detection.assert_called_once()
 
-    def test_no_face_recognition(self):
+    @patch('faces.tasks.publish_detection')
+    def test_no_face_recognition(self, mocked_publish_detection):
         face_image = get_temp_face_image('images/no_face_image.jpeg')
         submission = FacesSubmission.objects.create(image=face_image.name)
 
@@ -53,3 +59,4 @@ class FacesRecognitionTaskTestCase(TestCase):
         self.assertEqual(submission.faces_count, 0)
         self.assertIsNotNone(submission.processed_at)
         self.assertTrue(submission.processed_image.name == '')
+        mocked_publish_detection.assert_not_called()

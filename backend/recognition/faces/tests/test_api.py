@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
 from unittest.mock import patch
 
+from django.conf import settings
 from django.shortcuts import reverse
 from django.test import override_settings
 from PIL import Image
@@ -43,7 +44,7 @@ class SubmitImageViewTestSuite(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         expected_response = {
             'message': 'Request accepted. Starting image processing.',
-            'feed_url': 'TODO',
+            'feed_url': settings.FACES_WS_URL,
         }
         self.assertEqual(response.data, expected_response)
         self.assertEqual(FacesSubmission.objects.count(), 1)

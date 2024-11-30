@@ -52,6 +52,12 @@ Notification message format:
 
 Note: Image size is currently limited to 100MB. It can be adjusted on the proxy. 
 
+## Running tests
+
+```
+docker compose run backend python manage.py test
+```
+
 
 ## Design decisions
 - Using sqlite instead of service like DB for simplicity. Potentially the app can be written without DB persistence layer using only Redis. Optionally, Redis' persistence can be uplifted.

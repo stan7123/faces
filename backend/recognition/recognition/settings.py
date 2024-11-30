@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import sys
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
@@ -179,6 +180,12 @@ LOGGING = {
         },
     }
 }
+
+if 'test' in sys.argv:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+    }
 
 FACES_DETECTION_TOPIC = 'face-detection'
 SERVICE_URL = env.str('SERVICE_URL')

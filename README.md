@@ -1,5 +1,6 @@
 # Faces
 Simple app for face recognition from images.
+Supported extensions `gif`, `jpg`, `jpeg`, `png`.
 
 ![connery](https://github.com/user-attachments/assets/10e2093d-2874-4480-91ff-887bc55495f5) ![image](https://github.com/user-attachments/assets/1a86feaf-2f87-46b3-a278-6f578754e32f)
 
@@ -64,6 +65,7 @@ docker compose run backend python manage.py test
 - Storing uploaded and processed files in directories next to the code for simplicity. Usually some kind of storage service like S3 is used.
 - Using django-rq as simple and lightweight alternative to Celery
 - Using simple websocket stand-alone server to not go into more complicated Django channels. This required introducing nginx proxy to keep the requirement of serving the app on one port.
+- Image extensions(formats) are limited to: gif, jpg, jpeg, png. The app can probably process many other formats - can be researched an extended.
 - Face detection library is used without tuning any parameters.
 - Face detection tasks are retried 10 times with exponential backoff in case of error. After that, submissions can be ignored or a periodical task (not implemented) might try to schedule them again.  
 

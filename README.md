@@ -30,7 +30,7 @@ Or to run in the background:
 docker compose up -d --build
 ```
 
-Open http://localhost:8282/image to confirm the service is running (should show DRF's submit image page). 
+Open http://localhost:8282/healthcheck to confirm the service is running (should show "OK"). 
 
 ## How to use
 

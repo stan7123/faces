@@ -16,12 +16,14 @@ Including another URLconf
 """
 
 from django.conf import settings
-from django.urls import path
 from django.conf.urls.static import static
+from django.http import HttpResponse
+from django.urls import path
 
 from faces.views import SubmitImageView
 
 
 urlpatterns = [
+    path('healthcheck/', lambda request: HttpResponse('OK')),
     path('image/', SubmitImageView.as_view(), name='faces-image-submit'),
 ] + static(settings.STATIC_URL, document_root=settings.STORAGE_ROOT)

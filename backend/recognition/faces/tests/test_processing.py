@@ -33,7 +33,7 @@ class FacesRecognitionTaskTestCase(TestCase):
         self.assertEqual(submission.faces_count, 1)
         self.assertIsNotNone(submission.processed_at)
         self.assertTrue(submission.processed_image.name.endswith('.jpg'))
-        mocked_publish_detection.assert_called_once()
+        mocked_publish_detection.assert_called_once_with(submission)
 
     @patch('faces.tasks.publish_detection')
     def test_successful_multiple_face_recognition(self, mocked_publish_detection):
@@ -46,7 +46,7 @@ class FacesRecognitionTaskTestCase(TestCase):
         self.assertEqual(submission.faces_count, 2)
         self.assertIsNotNone(submission.processed_at)
         self.assertTrue(submission.processed_image.name.endswith('.jpg'))
-        mocked_publish_detection.assert_called_once()
+        mocked_publish_detection.assert_called_once_with(submission)
 
     @patch('faces.tasks.publish_detection')
     def test_no_face_recognition(self, mocked_publish_detection):

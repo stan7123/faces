@@ -14,6 +14,7 @@ Supported extensions `gif`, `jpg`, `jpeg`, `png`.
 Get the code from Github:
 ```
 git clone https://github.com/stan7123/faces.git
+cd faces
 ```
 
 ### Running
